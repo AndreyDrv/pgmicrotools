@@ -1,0 +1,17 @@
+#!/bin/sh
+#Remove all postgreSQL database connections to unlock.
+#usage: 
+#put script into "~/bin/" to feel more comfortable.
+#pgkillconns superuser_name database_name.
+#
+#Glushkov Andrey
+#https://github.com/AndreyDrv/pgmicrotools
+
+psql -U $1 -d postgres -c "SELECT \
+    pg_terminate_backend(procpid) \
+FROM \
+    pg_stat_activity \
+WHERE \
+    procpid <> pg_backend_pid() \
+    AND datname = '$2' \
+    ;"
